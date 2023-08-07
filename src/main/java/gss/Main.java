@@ -24,8 +24,8 @@ public class Main {
 			System.out.println("=== isStartupFromJar: " + isStartupFromJar);
 			String path = System.getProperty("user.dir") + File.separator; // Jar
 			if (!isStartupFromJar) {// IDE
-				path = os.contains("Mac") ? "/Users/nicole/Dropbox/POST/JavaTools/Phase2/" // Mac
-						: "C:/Users/nicole_tsou/Dropbox/POST/JavaTools/Phase2/"; // win
+				path = os.contains("Mac") ? "/Users/nicole/Dropbox/POST/JavaTools/POST-ParsePhase2/" // Mac
+						: "C:/Users/nicole_tsou/Dropbox/POST/JavaTools/POST-ParsePhase2/"; // win
 //						: "C:/Users/Nicole/Dropbox/POST/POST-ParseExcel2HQL/"; // win(MSI)
 			}
 

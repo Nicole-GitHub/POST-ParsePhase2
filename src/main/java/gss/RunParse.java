@@ -34,10 +34,10 @@ public class RunParse {
 			for (int r = 2; r <= sheet.getLastRowNum(); r++) {
 
 				System.out.println(r);
-//				if(r == 708) {
-//					System.out.println("708 找不到檔案，跳過");
+				if(r == 96) {
+					System.out.println("708 找不到檔案，跳過");
 //					continue;
-//				}
+				}
 				
 				row = sheet.getRow(r);
 				if (row == null || !Tools.isntBlank(row.getCell(2)))
@@ -71,18 +71,21 @@ public class RunParse {
 //					System.out.println(cmdPath);
 				}
 				
-//				cmdPath = cmdPath.replace("D:","C:\\SVN"); // win
-				cmdPath = cmdPath.replace("D:","/Users/nicole/22"); // mac
-				cmdPath = cmdPath.replace("C:\\SVN","/Users/nicole/22"); // mac
+				cmdPath = cmdPath.replace("D:","C:/SVN"); // win
+//				cmdPath = cmdPath.replace("D:","/Users/nicole/22"); // mac
+//				cmdPath = cmdPath.replace("C:\\SVN","/Users/nicole/22"); // mac
 				CellStyle style = Tools.setStyle(workbook);
 				Tools.setStringCell(style, null, row, 11, cmdPath);
-				String filePathAndParams = cmdPath.substring(cmdPath.indexOf("/Users"));
+//				String filePathAndParams = cmdPath.substring(cmdPath.indexOf("/Users")); // mac
+				String filePathAndParams = cmdPath.substring(cmdPath.indexOf("C:/SVN")); // win
 				String filePath = filePathAndParams.substring(0,filePathAndParams.indexOf(" "));
 				filePath = filePath.replace("\\", "/");
 
-				filePathAndParams = filePathAndParams.replace("/", ".").replace("\\", ".");
+				filePathAndParams = filePathAndParams.replace("/", ".").replace("\\", ".").replace(":", "");
 				String outputPath = path + "Output/" + jobName + "/";
 				String outputFileName = r + "_" + filePathAndParams;
+				outputFileName = outputFileName.replace("2>&1","");
+				
 				// 將excel內對應到的Perl檔複製到output下對應JobName目錄並變更副檔名為txt
 				try {
 					FileTools.createFile(outputPath, outputFileName, "txt",	FileTools.readFileContent(filePath));
