@@ -34,8 +34,8 @@ public class RunParse {
 			for (int r = 2; r <= sheet.getLastRowNum(); r++) {
 
 				System.out.println(r);
-				if(r == 96) {
-					System.out.println("708 找不到檔案，跳過");
+				if(r == 708) {
+					System.out.println("===================");
 //					continue;
 				}
 				
@@ -74,14 +74,16 @@ public class RunParse {
 				cmdPath = cmdPath.replace("D:","C:/SVN"); // win
 //				cmdPath = cmdPath.replace("D:","/Users/nicole/22"); // mac
 //				cmdPath = cmdPath.replace("C:\\SVN","/Users/nicole/22"); // mac
+
+				cmdPath = cmdPath.replace("\\", "/");
 				CellStyle style = Tools.setStyle(workbook);
 				Tools.setStringCell(style, null, row, 11, cmdPath);
 //				String filePathAndParams = cmdPath.substring(cmdPath.indexOf("/Users")); // mac
 				String filePathAndParams = cmdPath.substring(cmdPath.indexOf("C:/SVN")); // win
 				String filePath = filePathAndParams.substring(0,filePathAndParams.indexOf(" "));
-				filePath = filePath.replace("\\", "/");
 
 				filePathAndParams = filePathAndParams.replace("/", ".").replace("\\", ".").replace(":", "");
+				filePathAndParams = filePathAndParams.substring(filePathAndParams.indexOf("ETL."));
 				String outputPath = path + "Output/" + jobName + "/";
 				String outputFileName = r + "_" + filePathAndParams;
 				outputFileName = outputFileName.replace("2>&1","");
@@ -89,15 +91,15 @@ public class RunParse {
 				// 將excel內對應到的Perl檔複製到output下對應JobName目錄並變更副檔名為txt
 				try {
 					FileTools.createFile(outputPath, outputFileName, "txt",	FileTools.readFileContent(filePath));
-				} catch(Exception e) {
+					// 將cmd(含params)一起寫入上述檔案中
+					FileTools.writeFileContent(outputPath + outputFileName + ".txt", filePathAndParams, true);
+				} catch (Exception e) {
 					if(e.getMessage().contains("(No such file or directory)")) {
 						System.out.println(r + "(No such file or directory)");
 						continue;
 					}
 				}
 				
-				// 將cmd(含params)一起寫入上述檔案中
-				FileTools.writeFileContent(outputPath + outputFileName + ".txt", filePathAndParams, true);
 			}
 
 			Tools.output(workbook, path, "排程整理2.xlsx");

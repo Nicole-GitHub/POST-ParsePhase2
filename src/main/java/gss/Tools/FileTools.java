@@ -80,7 +80,7 @@ public class FileTools {
 			File file = new File(filePathName);// 檔案路徑(包括檔名稱)
 			// 將原檔案內容讀入輸入流
 			fis = new FileInputStream(file);
-			isr = new InputStreamReader(fis);
+			isr = new InputStreamReader(fis, "UTF8");
 			br = new BufferedReader(isr);
 			StringBuffer buffer = new StringBuffer();
 			// 寫入檔案原有內容
