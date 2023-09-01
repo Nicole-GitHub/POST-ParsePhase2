@@ -34,10 +34,10 @@ public class RunParse {
 			for (int r = 2; r <= sheet.getLastRowNum(); r++) {
 
 				System.out.println(r);
-				if(r == 708) {
-					System.out.println("===================");
-//					continue;
-				}
+//				if(r == 731) {
+//					System.out.println("===================");
+////					continue;
+//				}
 				
 				row = sheet.getRow(r);
 				if (row == null || !Tools.isntBlank(row.getCell(2)))
@@ -84,8 +84,13 @@ public class RunParse {
 
 				filePathAndParams = filePathAndParams.replace("/", ".").replace("\\", ".").replace(":", "");
 				filePathAndParams = filePathAndParams.substring(filePathAndParams.indexOf("ETL."));
+
+				String perlName = filePathAndParams.substring(0,filePathAndParams.indexOf(" "));
+				perlName = perlName.substring(perlName.lastIndexOf(".",perlName.lastIndexOf(".")-1)+1);
+				String perlNameAndParams = perlName + filePathAndParams.substring(filePathAndParams.indexOf(" "));
+
 				String outputPath = path + "Output/" + jobName + "/";
-				String outputFileName = r + "_" + filePathAndParams;
+				String outputFileName = (r+1) + "_" + perlNameAndParams;
 				outputFileName = outputFileName.replace("2>&1","");
 				
 				// 將excel內對應到的Perl檔複製到output下對應JobName目錄並變更副檔名為txt
