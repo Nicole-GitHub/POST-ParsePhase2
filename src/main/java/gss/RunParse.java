@@ -28,7 +28,7 @@ public class RunParse {
 
 			Workbook workbook = Tools.getWorkbook(path+"排程整理.xlsx");
 
-			Sheet sheet = workbook.getSheet("JOB STEP");
+			Sheet sheet = workbook.getSheet("JOB STEP (單一JOB)");
 
 			Row row = null;
 			for (int r = 2; r <= sheet.getLastRowNum(); r++) {
