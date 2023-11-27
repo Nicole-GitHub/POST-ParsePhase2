@@ -219,8 +219,8 @@ public class Tools {
 			else if (cell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 				if (cell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC)
 					return String.valueOf((int) cell.getNumericCellValue()).trim();
-				else if (cell.getCellType() == Cell.CELL_TYPE_STRING)
-					return cell.getStringCellValue().trim();
+				else if (cell.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING)
+					return cell.getStringCellValue().trim();	
 			}
 		} catch (Exception ex) {
 			throw new Exception(className + " getCellValue " + fieldName + " 格式錯誤");

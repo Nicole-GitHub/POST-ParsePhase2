@@ -28,13 +28,14 @@ public class RunParse {
 
 			Workbook workbook = Tools.getWorkbook(path+"排程整理.xlsx");
 
-			Sheet sheet = workbook.getSheet("JOB STEP (單一JOB)");
+//			Sheet sheet = workbook.getSheet("JOB STEP (單一JOB)");
+			Sheet sheet = workbook.getSheet("JOB STEP");
 
 			Row row = null;
 			for (int r = 2; r <= sheet.getLastRowNum(); r++) {
 
 				System.out.println(r);
-//				if(r == 731) {
+//				if(r == 1780) {
 //					System.out.println("===================");
 ////					continue;
 //				}
@@ -44,12 +45,14 @@ public class RunParse {
 					break;
 
 				String jobName = Tools.getCellValue(row, 2, "jobName");
-				String cmd = Tools.getCellValue(row, 5, "參數說明");
-				String params = Tools.getCellValue(row, 9, "參數說明");
-				String cmdPath = Tools.getCellValue(row, 10, "指令");
+				String cmd = Tools.getCellValue(row, 5, "Command");
+				String iswork = Tools.getCellValue(row, 8, "作用中?");
+				String params = Tools.getCellValue(row, 10, "參數說明");
+				String cmdPath = Tools.getCellValue(row, 11, "指令");
 
 //				System.out.println(params);
-				if(StringUtils.isBlank(cmd) || StringUtils.isBlank(params) || StringUtils.isBlank(cmdPath))
+				if(StringUtils.isBlank(cmd) || StringUtils.isBlank(params) || StringUtils.isBlank(cmdPath)
+						|| "N".equals(iswork))
 					continue;
 				
 				Map<String, String> paramsArrayMap = new HashMap<String, String>();
@@ -82,22 +85,23 @@ public class RunParse {
 				String filePathAndParams = cmdPath.substring(cmdPath.indexOf("C:/SVN")); // win
 				String filePath = filePathAndParams.substring(0,filePathAndParams.indexOf(" "));
 
-				filePathAndParams = filePathAndParams.replace("/", ".").replace("\\", ".").replace(":", "");
-				filePathAndParams = filePathAndParams.substring(filePathAndParams.indexOf("ETL."));
+//				filePathAndParams = filePathAndParams.replace("/", ".").replace("\\", ".").replace(":", "");
+//				filePathAndParams = filePathAndParams.substring(filePathAndParams.indexOf("ETL."));
 
 				String perlName = filePathAndParams.substring(0,filePathAndParams.indexOf(" "));
-				perlName = perlName.substring(perlName.lastIndexOf(".",perlName.lastIndexOf(".")-1)+1);
-				String perlNameAndParams = perlName + filePathAndParams.substring(filePathAndParams.indexOf(" "));
+				perlName = perlName.substring(perlName.lastIndexOf("/",perlName.lastIndexOf(".")-1)+1);
+//				String perlNameAndParams = perlName + filePathAndParams.substring(filePathAndParams.indexOf(" "));
 
 				String outputPath = path + "Output/" + jobName + "/";
-				String outputFileName = (r+1) + "_" + perlNameAndParams;
+//				String outputFileName = (r+1) + "_" + perlNameAndParams;
+				String outputFileName = (r+1) + "_" + perlName; // 檔名改只到.PL就好
 				outputFileName = outputFileName.replace("2>&1","");
 				
 				// 將excel內對應到的Perl檔複製到output下對應JobName目錄並變更副檔名為txt
 				try {
 					FileTools.createFile(outputPath, outputFileName, "txt",	FileTools.readFileContent(filePath));
 					// 將cmd(含params)一起寫入上述檔案中
-					FileTools.writeFileContent(outputPath + outputFileName + ".txt", filePathAndParams, true);
+					FileTools.writeFileContent(outputPath + outputFileName + ".txt", "="+filePathAndParams, true);
 				} catch (Exception e) {
 					if(e.getMessage().contains("(No such file or directory)")) {
 						System.out.println(r + "(No such file or directory)");
@@ -107,7 +111,7 @@ public class RunParse {
 				
 			}
 
-			Tools.output(workbook, path, "排程整理2.xlsx");
+			Tools.output(workbook, path, "排程整理_Output");
 
 			System.out.println("Done!");
 		} catch (Exception ex) {
