@@ -28,8 +28,8 @@ public class RunParse {
 
 			Workbook workbook = Tools.getWorkbook(path+"排程整理.xlsx");
  
-//			Sheet sheet = workbook.getSheet("JOB STEP (單一JOB)");
-			Sheet sheet = workbook.getSheet("JOB STEP");
+			Sheet sheet = workbook.getSheet("JOB STEP (單一JOB)");
+//			Sheet sheet = workbook.getSheet("JOB STEP");
 
 			Row row = null;
 			for (int r = 2; r <= sheet.getLastRowNum(); r++) {
@@ -74,10 +74,12 @@ public class RunParse {
 //					System.out.println(cmdPath);
 				}
 				
-				cmdPath = cmdPath.replace("D:","C:/SVN"); // win
+				// 實際要抓的ETL PERL程式路徑
+				String etlPLPath = "C:/SVN/dw2209/COLLECTION/郵政整體資訊管理系統/現行郵政整體資訊管理系統SourceCode";
+				cmdPath = cmdPath.replace("D:",etlPLPath); // win
 //				cmdPath = cmdPath.replace("D:","/Users/nicole/22"); // mac
-//				cmdPath = cmdPath.replace("C:\\SVN","/Users/nicole/22"); // mac
-
+//				cmdPath = cmdPath.replace("C:\\SVN","/Users/nicole/22"); // mac 
+				
 				cmdPath = cmdPath.replace("\\", "/");
 				CellStyle style = Tools.setStyle(workbook);
 				Tools.setStringCell(style, null, row, 11, cmdPath);
@@ -99,12 +101,13 @@ public class RunParse {
 				
 				// 將excel內對應到的Perl檔複製到output下對應JobName目錄並變更副檔名為txt
 				try {
-					FileTools.createFile(outputPath, outputFileName, "txt",	FileTools.readFileContent(filePath));
+					FileTools.createFile(outputPath, outputFileName, "pl",	FileTools.readFileContent(filePath));
 					// 將cmd(含params)一起寫入上述檔案中
-					FileTools.writeFileContent(outputPath + outputFileName + ".txt", "="+filePathAndParams, true);
+					FileTools.writeFileContent(outputPath + outputFileName + ".pl", "="+filePathAndParams, true);
 				} catch (Exception e) {
-					if(e.getMessage().contains("(No such file or directory)")) {
-						System.out.println(r + "(No such file or directory)");
+					String NoSuchFile = "(No such file or directory)";
+					if(e.getMessage().contains(NoSuchFile)) {
+						System.out.println(r + NoSuchFile);
 						continue;
 					}
 				}
